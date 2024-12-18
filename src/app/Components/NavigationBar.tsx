@@ -24,15 +24,15 @@ export default function NavigationBar() {
             <div className="flex list-none md:gap-20 gap-5 font-roboto ">
                 <Link href={"/Gaming"}>
 
-                        <li className={`cursor-pointer ${isActive("/Gaming")}`}>Gaming</li>
+                        <li className={`cursor-pointer ${isActive("/Gaming")} cursor-pointer hover:text-[#00FFFF]`}>Gaming</li>
                 </Link>
                 <Link href={"/Movies"}>
 
-                        <li className={`cursor-pointer ${isActive("/Movies")}`}>Movies & Series</li>
+                        <li className={`cursor-pointer ${isActive("/Movies")} cursor-pointer hover:text-[#00FFFF]`}>Movies & Series</li>
                 </Link>
                 <Link href={"/Electronics"}>
 
-                        <li className={`cursor-pointer ${isActive("/Electronics")}`}>Electronics</li>
+                        <li className={`cursor-pointer ${isActive("/Electronics")} cursor-pointer hover:text-[#00FFFF]`}>Electronics</li>
                 </Link>
             </div>
         </div>
