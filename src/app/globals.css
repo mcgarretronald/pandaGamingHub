@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #19191B; /* Set background to a single color */
+  --foreground: #ededed; /* Updated foreground for contrast */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
