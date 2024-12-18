@@ -18,7 +18,7 @@ export default function HeroSection() {
             >
                 <source src="/hreovideo.mp4" type="video/mp4" />
             </video>
-            <audio autoPlay loop>
+            <audio autoPlay>
                 <source src="/trapbeats.mp3#t=0,20" type="audio/mp3" />
             </audio>
             <div style={{ position: 'relative', zIndex: 1, color: '#fff', }}>

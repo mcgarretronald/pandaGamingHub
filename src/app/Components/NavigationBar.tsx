@@ -9,7 +9,7 @@ export default function NavigationBar() {
     const isActive = (path: string) => pathname === path ? "text-[#00FFFF]" : "";  // Corrected color format
 
     return (
-        <div className='flex justify-between items-center md:mx-12 mx-3 mt-5 font-roboto'>
+        <div className='flex justify-between items-center md:mx-12 mx-3 pt-5 font-roboto'>
             <div>
                 <Link href={"/Home"}>
                     <Image

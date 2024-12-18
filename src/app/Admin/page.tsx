@@ -1,16 +1,69 @@
-
-import AddItemCard from '../Components/AddItem'
+"use client";
+import { useState } from "react";
+import AddItemCard from "../Components/AddItem";
+import Gamesform from "../Components/Forms/gamesform";
+import Moviesform from "../Components/Forms/moviesform";
+import Electronicsform from "../Components/Forms/electronicsform";
+import NavigationBar from "../Components/NavigationBar";
 
 export default function Admin() {
+    const [activeForm, setActiveForm] = useState<string | null>(null);
+
+    // Handle card click and set the active form
+    const handleCardClick = (form: string) => {
+        setActiveForm(form);
+    };
+
+    // Render the appropriate form based on the selected item
+    const renderForm = () => {
+        switch (activeForm) {
+            case "Gaming":
+                return <Gamesform />;
+            case "Movies":
+                return <Moviesform />;
+            case "Electronics":
+                return <Electronicsform />;
+            default:
+                return null;
+        }
+    };
+
     return (
-        <div style={{backgroundImage: "url(/Images/hero.png)", backgroundSize: "cover", backgroundRepeat: "no-repeat", height: "100vh"}}>
-            <div className="flex justify-center gap-10 pt-[20%]">
-            <AddItemCard item="Gaming" />
-            <AddItemCard item="Movies" />
-            <AddItemCard item="Electronics" />
+        <div
+            className="h-screen relative"
+            style={{
+                backgroundImage: "url(/Images/hero.png)",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+            }}
+        > <NavigationBar/>
+
+            {/* AddItemCard Section */}
+            <div className="flex justify-center gap-10 pt-[15%]">
+                <AddItemCard item="Gaming" onClick={() => handleCardClick("Gaming")} />
+                <AddItemCard item="Movies" onClick={() => handleCardClick("Movies")} />
+                <AddItemCard item="Electronics" onClick={() => handleCardClick("Electronics")} />
             </div>
             
+            
+            {/* Modal Section */}
+            {activeForm !== null && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-[#080808] p-8 rounded-lg shadow-xl w-[90%] md:w-[50%]">
+                        {/* Close Button */}
+                        <div className="flex justify-end mb-4">
+                            <button
+                                onClick={() => setActiveForm(null)}
+                                className="font-bold px-3 py-1 bg-btnbackground rounded hover:bg-blue-400"
+                            >
+                                Close
+                            </button>
+                        </div>
+                        {/* Render Selected Form */}
+                        {renderForm()}
+                    </div>
+                </div>
+            )}
         </div>
-    )
+    );
 }
-
