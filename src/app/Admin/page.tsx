@@ -48,8 +48,8 @@ export default function Admin() {
             
             {/* Modal Section */}
             {activeForm !== null && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-[#080808] p-8 rounded-lg shadow-xl w-[90%] md:w-[50%]">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
+                    <div className="bg-[#080808] bg-opacity-90 p-8 rounded-lg shadow-xl w-[90%] md:w-[50%]">
                         {/* Close Button */}
                         <div className="flex justify-end mb-4">
                             <button
