@@ -30,16 +30,17 @@ export default function Admin() {
 
     return (
         <div
-            className="h-screen relative"
+            className="w-full h-full fixed"
             style={{
                 backgroundImage: "url(/Images/hero.png)",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
             }}
-        > <NavigationBar/>
+        >
+            <NavigationBar />
 
             {/* AddItemCard Section */}
-            <div className="flex justify-center gap-10 pt-[15%]">
+            <div className="flex md:flex-row flex-col items-center justify-center gap-10 pt-[15%]">
                 <AddItemCard item="Gaming" onClick={() => handleCardClick("Gaming")} />
                 <AddItemCard item="Movies" onClick={() => handleCardClick("Movies")} />
                 <AddItemCard item="Electronics" onClick={() => handleCardClick("Electronics")} />
@@ -51,12 +52,12 @@ export default function Admin() {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-10 z-50">
                     <div className="bg-[#080808] bg-opacity-90 p-8 rounded-lg shadow-xl w-[90%] md:w-[50%]">
                         {/* Close Button */}
-                        <div className="flex justify-end mb-4">
+                        <div className="flex justify-end">
                             <button
                                 onClick={() => setActiveForm(null)}
-                                className="font-bold px-3 py-1 bg-btnbackground rounded hover:bg-blue-400"
+                                className="font-bold  flex align-center justify-center text-lg px-2 bg-btnbackground rounded hover:bg-blue-400"
                             >
-                                Close
+                                x
                             </button>
                         </div>
                         {/* Render Selected Form */}

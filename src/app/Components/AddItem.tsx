@@ -12,7 +12,7 @@ export default function AddItemCard({ item, onClick }: Props) {
             onClick={onClick} // Handle click events
         >
             {/* Icon Container */}
-            <div className="rounded-[12px] p-20 bg-white bg-opacity-80 shadow-lg hover:shadow-2xl transition-shadow duration-300">
+            <div className="rounded-[12px] md:p-20 p-7 bg-white bg-opacity-80 shadow-lg hover:shadow-2xl transition-shadow duration-300">
                 <FaPlus size={50} className="text-gray-700" />
             </div>
 
