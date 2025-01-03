@@ -17,7 +17,7 @@ export const metadata = {
   title: "PANDA GAMING HUB",
   description: "The PANDA GAMING HUB OFFICIAL WEBSITE",
   icons: {
-    icon: "/logo.svg",
+    icon: "Images/logo.svg",
   },
 };
 
