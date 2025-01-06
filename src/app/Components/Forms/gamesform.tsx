@@ -39,8 +39,8 @@ export default function Gamesform() {
                 imageUrl: "",
                 charges: {
                     oneGame: "",
-                    thirtyMinutes: "",
-                    oneHour: "",
+                    thirtyMinutes: "50",
+                    oneHour: "100",
                 },
             });
         } catch (error) {
