@@ -22,11 +22,11 @@ export default function GamingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://panda-gaming-hub-default-rtdb.firebaseio.com/games.json");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL}/games.json`);
         const data = await response.json();
 
         // Convert the fetched object into an array if necessary (if Firebase returns data as an object)
-        const gamesArray = Object.values(data);
+        const gamesArray = Object.values(data) as Game[];
         setGames(gamesArray);
       } catch (error) {
         setError(error instanceof Error ? error : new Error('An unknown error occurred'));
