@@ -13,23 +13,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Production 
+    environment: Production
     strategy:
       matrix:
         node-version: [18]
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Step 4: Create .env.production file with Firebase secrets
       - name: Create .env.production file
         run: |
           echo "NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}" >> .env.production
@@ -40,35 +37,42 @@ jobs:
           echo "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" >> .env.production
           echo "NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}" >> .env.production
 
-      # Step 5: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 6: Build the Next.js project
       - name: Build Next.js project
         run: npm run build
 
   deploy:
-          runs-on: ubuntu-latest
-          needs: build
-          if: github.ref == 'refs/heads/main'  
-      
-            
-              
-          steps:
-            - uses: actions/checkout@v2  
-            - name: Install Vercel CLI
-              working-directory: ./
-              run: npm install --global vercel@latest
-            - name: Pull Vercel Environment Information
-              working-directory: ./ 
-              run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-            - name: Build Project Artifacts
-              working-directory: ./
-              run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-            - name: Deploy Project Artifacts to Vercel
-              working-directory: ./
-              run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-      
-            - name: Notify Deployment Success
-              run: echo "Deployment to Vercel successful!"
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Set Firebase Environment Variables
+        run: |
+          echo "NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_DATABASE_URL=${{ secrets.NEXT_PUBLIC_FIREBASE_DATABASE_URL }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
+          echo "NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}" >> .env
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Notify Deployment Success
+        run: echo "Deployment to Vercel successful!"
