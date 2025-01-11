@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Production # Specify the environment for accessing secrets
+    environment: Production 
     strategy:
       matrix:
         node-version: [18]
@@ -28,11 +28,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
-      # Step 3: Debug environment variables (optional; remove for production)
-      - name: Debug environment variables
-        run: printenv | grep NEXT_PUBLIC_
-        shell: bash
 
       # Step 4: Create .env.production file with Firebase secrets
       - name: Create .env.production file
