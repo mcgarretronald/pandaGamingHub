@@ -5,50 +5,78 @@ import Image from 'next/image';
 
 // Define the type for each game object
 interface Game {
-  imageUrl: string;
+  background_image: string;
   name: string;
-  charges: {
+  platforms: { platform: { name: string } }[]; // Include platform details for filtering
+  ratings: {
+    average: number;
+    count: number;
+  };
+  prices: {
     oneGame: string;
     oneHour: string;
     thirtyMinutes: string;
   };
 }
 
-export default function GamingPage() {
+const GamingPage = () => {
+  // State for storing fetched games, errors, and search term
   const [games, setGames] = useState<Game[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Fetch game data from the API when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL}/games.json`);
+        const response = await fetch(`https://api.rawg.io/api/games?platforms=18&key=${process.env.NEXT_PUBLIC_GAMES_API_KEY}`);
         const data = await response.json();
 
-        // Convert the fetched object into an array if necessary (if Firebase returns data as an object)
-        const gamesArray = Object.values(data) as Game[];
+        // Map API response to our Game interface structure
+        const gamesArray = data.results.map((game: { name: string; background_image: string; platforms: { platform: { name: string } }[]; rating: number; ratings_count: number }) => ({
+          name: game.name,
+          background_image: game.background_image,
+          platforms: game.platforms,
+          ratings: {
+            average: game.rating, // average rating
+            count: game.ratings_count, // number of reviews
+          },
+          prices: {
+            oneGame: 'Pay after play', // Fallback prices (adjust as necessary)
+            oneHour: 'Ksh 100',
+            thirtyMinutes: 'Ksh 50',
+          }
+        }));
+
         setGames(gamesArray);
-      } catch (error) {
-        setError(error instanceof Error ? error : new Error('An unknown error occurred'));
-        console.error("Error fetching data:", error);
-      }
-    };
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+          console.error("Error fetching data:", error);
+        }
+      };
 
     fetchData();
   }, []);
 
+  // Handle search input change
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
   };
 
+  // Filter games based on the search term
   const filteredGames = games.filter(game => game.name.toLowerCase().includes(searchTerm));
 
   return (
     <div>
       <NavigationBar />
-
+      {error && <div className="error-message text-red-500 text-center">{error}</div>}
+      
+      {/* Search Bar */}
       <div className="flex p-4">
-        {/* Search Bar aligned to the left */}
         <div className="ml-12 w-full sm:w-2/3 lg:w-1/2">
           <input
             type="text"
@@ -60,43 +88,41 @@ export default function GamingPage() {
         </div>
       </div>
 
-      <div className="flex">
-        <div className="gaming-list mx-auto my-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-          {error && <p>Error fetching data: {error.message}</p>}
-
-          {/* Display games or show fallback if no games match */}
+      {/* Game List Display */}
+      <div className="flex justify-center ">
+        <div className="gaming-list mx-auto text-center my-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          {/* Display games or fallback if no games match */}
           {filteredGames.length > 0 ? (
             filteredGames.map((game, index) => (
-              <div key={index} className="game-item flex flex-col items-center rounded-[8px] relative group">
+              <div key={index} className="game-item flex flex-col items-center justify-center rounded-[8px] relative group transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg hover:translate-y-[-5px]">
+                
+                {/* Game Image */}
                 <Image
-                  src={game.imageUrl || '/default-image.png'}  // Fallback to a default image if imageUrl is unavailable
+                  src={game.background_image || '/Images/notfound.png'}  // Fallback to a default image if background_image is unavailable
                   alt={game.name}
-                  width={300}  // Adjust width
-                  height={100} // Adjust height
-                  className="object-cover rounded-lg brightness-90"
+                  width={500}
+                  height={500}
+                  className="object-cover rounded-lg brightness-90 cursor-pointer"
                 />
 
-                <h2 className='absolute bottom-2 text-xl font-bold font-roboto text-white'>{game.name}</h2>
-
-                {/* Charges div (hidden by default) */}
-                <div className="absolute bottom-0 w-full h-full bg-black bg-opacity-60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="text-center">
-                    <p>One Game: {game.charges.oneGame || 'Pay after play'}</p>
-                    <p>1/2 hour: {game.charges.thirtyMinutes || 'Ksh 50'}</p>
-                    <p>1 Hour: {game.charges.oneHour || 'Ksh 100'}</p>
-                  </div>
+                {/* Game Name */}
+                <h2 className='text-xl font-bold font-roboto text-white'>{game.name}</h2>
+                
+                {/* Reviews next to the game name */}
+                <div className="text-sm font-semibold text-yellow-300">
+                  ⭐ {game.ratings.average ? `${game.ratings.average} (${game.ratings.count} reviews)` : "No ratings yet"}
                 </div>
               </div>
             ))
           ) : (
-            // Fallback content with centering
+            // Fallback content if no games match
             <div className="flex justify-center items-center w-full h-full col-span-full">
-              <div className="flex flex-col justify-center items-center text-center">
+              <div className="flex mt-[10%] flex-col justify-center items-center text-center">
                 <Image
                   src="/Images/notfound.png"
                   alt="No games found"
-                  width={600}
-                  height={500}
+                  width={400}
+                  height={700}
                 />
                 <p className="mt-4 text-lg">The game you&apos;re looking for may have been removed or is currently unavailable</p>
               </div>
@@ -106,4 +132,6 @@ export default function GamingPage() {
       </div>
     </div>
   );
-}
+};
+
+export default GamingPage;

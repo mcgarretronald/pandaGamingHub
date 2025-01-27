@@ -30,10 +30,10 @@ export default function NavigationBar() {
 
                         <li className={`cursor-pointer ${isActive("/Movies")} cursor-pointer hover:text-[#00FFFF]`}>Movies & Series</li>
                 </Link>
-                <Link href={"/Electronics"}>
+                {/* <Link href={"/Electronics"}>
 
                         <li className={`cursor-pointer ${isActive("/Electronics")} cursor-pointer hover:text-[#00FFFF]`}>Electronics</li>
-                </Link>
+                </Link> */}
             </div>
         </div>
     )
