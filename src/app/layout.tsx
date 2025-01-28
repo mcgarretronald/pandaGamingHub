@@ -1,5 +1,6 @@
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";  // Import the Script component
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -28,6 +29,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-DF6SQJG0D7"
+          async
+        />
+        <Script
+          strategy="afterInteractive"
+          id="google-analytics-script"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-DF6SQJG0D7');
+            `,
+          }}
+        />
+      </head>
       <body className={`${poppins.variable} ${roboto.variable}`}>
         {children}
       </body>
